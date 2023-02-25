@@ -2,28 +2,41 @@
 """
 Module 0-gather_data_from_an_API
 """
+import requests
+from sys import argv
+
+
+def first_line(id):
+    id = eval(id)
+    if type(id) != int:
+        raise TypeError("The data entered is not an integer type")
+
+    users_url = "https://jsonplaceholder.typicode.com/users/"
+    todos_url = "https://jsonplaceholder.typicode.com/todos/"
+
+    response2 = requests.get(todos_url)
+    response = requests.get(users_url)
+
+    if (response.status_code and response2.status_code) == 200:
+        response = requests.get(users_url).json()
+        response2 = requests.get(todos_url).json()
+
+        k = 0
+        ls = []
+        for j in range(len(response2)):
+            if response2[j]['userId'] == response[id-1]['id']\
+                    and response2[j]['completed'] is True:
+                k += 1
+                ls.append(response2[j]['title'])
+
+        for i in range(len(response)):
+            if response[i]['id'] == id:
+                print("Employee {} is done with tasks({}/20):".format(
+                    response[i]['name'], k
+                    ))
+                for done_task in ls:
+                    print("\t", done_task)
+
+
 if __name__ == "__main__":
-    import requests
-    import sys
-
-    user_id = sys.argv[1]
-    url_employee = "https://jsonplaceholder.typicode.com/users/{}"\
-        .format(user_id)
-    url_todo = "https://jsonplaceholder.typicode.com/todos?userId={}"\
-        .format(user_id)
-    req_employee = requests.get(url_employee)
-    EN = req_employee.json().get('name')
-    req_todo = requests.get(url_todo)
-    TOTAL_T = len(req_todo.json())
-    TASKS = 0
-    NUMT = 0
-    lists = []
-    while TASKS < TOTAL_T:
-        if req_todo.json()[TASKS].get('completed') is True:
-            lists.append(req_todo.json()[TASKS].get('title'))
-            NUMT += 1
-        TASKS += 1
-
-    print("Employee {} is done with tasks({}/{}):".format(EN, NUMT, TOTAL_T))
-    for t in lists:
-        print("\t {}".format(t))
+    first_line(argv[1])
