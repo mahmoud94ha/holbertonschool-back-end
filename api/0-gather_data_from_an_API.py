@@ -11,7 +11,7 @@ if __name__ == '__main__':
     task = []
     done = 0
     total = 0
-    endpoint = f"https://jsonplaceholder.typicode.com/users/{id}"
+    endpoint = "https://jsonplaceholder.typicode.com/users/{}".format(id)
     user = get(endpoint).json()
     name = user.get('name')
     todos = "https://jsonplaceholder.typicode.com/todos/"
@@ -22,6 +22,6 @@ if __name__ == '__main__':
                 task.append(item['title'])
                 done += 1
             total += 1
-    print(f"Employee {name} is done with tasks({done}/{total}):")
+    print("Employee {} is done with tasks({}/{}):".format(name, done, total))
     for item in task:
-        print(f"\t {item}")
+        print("\t {}".format(item))
