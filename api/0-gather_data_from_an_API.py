@@ -3,18 +3,25 @@
 from requests import get
 from sys import argv
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     """main"""
+
     id = argv[1]
-    endpoint = 'https://jsonplaceholder.typicode.com'
-    user = get(f"{endpoint}/users/{id}").json()
-    getreq = get(f"{endpoint}/users/{id}/todos").json()
-    username = user.get('name')
-    counter = 0
-    for i in getreq:
-        if i['completed']:
-            counter += 1
-    print(f"Employee {username} is done with tasks({counter}/{len(getreq)}):")
-    for msg in getreq:
-        if msg.get('completed'):
-            print(f"\t {msg.get('title')}")
+    task = []
+    done = 0
+    total = 0
+    endpoint = f"https://jsonplaceholder.typicode.com/users/{id}"
+    user = get(endpoint).json()
+    name = user.get('name')
+    todos = "https://jsonplaceholder.typicode.com/todos/"
+    endpoint2 = get(todos).json()
+    for item in endpoint2:
+        if item.get('userId') == int(id):
+            if item.get('completed') is True:
+                task.append(item['title'])
+                done += 1
+            total += 1
+    print(f"Employee {name} is done with tasks({done}/{total}):")
+    for item in task:
+        print(f"\t {item}")
